@@ -44,3 +44,23 @@ INSERT INTO tbl_cat_categorias_gasto (nombre) VALUES
 ('Ambulancia'),
 ('Sutura'),
 ('Otros');
+
+
+-- Roles iniciales
+INSERT INTO tbl_roles (nombre, descripcion)
+VALUES
+('admin', 'Acceso completo al sistema'),
+('medico', 'Acceso a funciones médicas: ingreso, evolución, órdenes, etc.'),
+('enfermeria', 'Acceso a control de medicamentos, signos vitales, notas y gastos');
+ 
+ 
+ -- Usuario admin de prueba
+ INSERT INTO tbl_usuarios (fk_id_rol, nombre_completo, nombre_usuario, contrasena, email, activo)
+VALUES (
+  1, -- id del rol admin
+  'Administrador General',
+  'admin',
+  '$2b$10$FPVNheLXDoJPkGabb7sb0uzQfuIVjsfHwi8CJkfaLOtRjpCDuJitS', -- tu hash bcrypt
+  'admin@hospital.com',
+  TRUE
+);
