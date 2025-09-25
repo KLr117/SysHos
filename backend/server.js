@@ -29,6 +29,7 @@ const vitalSignsRoutes = require('./routes/vitalSigns');
 const nursingNotesRoutes = require('./routes/nursingNotes');
 const medicationApplicationRoutes = require('./routes/medicationApplications');
 const expensesRoutes = require('./routes/expenses');
+const admissionRoutes = require('./routes/admissions');
 
 // Usar middleware de datos mock
 app.use(mockData);
@@ -46,6 +47,7 @@ app.use('/api/vital-signs', vitalSignsRoutes);
 app.use('/api/nursing-notes', nursingNotesRoutes);
 app.use('/api/medication-applications', medicationApplicationRoutes);
 app.use('/api/expenses', expensesRoutes);
+app.use('/api/admissions', admissionRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
@@ -88,7 +90,7 @@ app.listen(PORT, () => {
   console.log(`🌐 URL: http://localhost:${PORT}`);
 });
 
-const pool = require('./config/database');
+const { pool } = require('./config/database');
 
 (async () => {
   try {

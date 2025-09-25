@@ -1,8 +1,23 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import authService from '../../services/authService';
 
 const Header = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const navigate = useNavigate();
+  const user = authService.getCurrentUser();
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      // Forzar redirección aunque falle la petición
+      navigate('/login');
+    }
+  };
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
@@ -62,8 +77,12 @@ const Header = () => {
                 <span className="text-sm font-bold text-white">U</span>
               </div>
               <div className="text-left">
-                <p className="text-sm font-medium text-gray-900">Dr. Usuario</p>
-                <p className="text-xs text-hospital-gray">Administrador</p>
+                <p className="text-sm font-medium text-gray-900">{user?.nombre_completo || 'Usuario'}</p>
+                <p className="text-xs text-hospital-gray">
+                  {user?.fk_id_rol === 1 ? 'Administrador' : 
+                   user?.fk_id_rol === 2 ? 'Médico' : 
+                   user?.fk_id_rol === 3 ? 'Enfermería' : 'Usuario'}
+                </p>
               </div>
               <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -80,9 +99,12 @@ const Header = () => {
                   Configuración
                 </a>
                 <hr className="my-2" />
-                <a href="#" className="block px-4 py-2 text-sm text-hospital-red hover:bg-red-50">
+                <button 
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-sm text-hospital-red hover:bg-red-50"
+                >
                   Cerrar Sesión
-                </a>
+                </button>
               </div>
             )}
           </div>

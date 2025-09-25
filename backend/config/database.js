@@ -14,7 +14,8 @@ const dbConfig = {
 
 // Crear pool de conexiones con promesas
 const pool = mysql.createPool(dbConfig).promise();
+const promisePool = pool;
 
-module.exports = pool;
+module.exports = { pool, promisePool };
 
 

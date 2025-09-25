@@ -35,7 +35,16 @@ const authorizeRole = (roles) => {
       });
     }
 
-    if (!roles.includes(req.user.role)) {
+    // Mapear fk_id_rol a nombres de roles
+    const roleMap = {
+      1: 'admin',
+      2: 'medico', 
+      3: 'enfermeria'
+    };
+    
+    const userRole = roleMap[req.user.fk_id_rol];
+    
+    if (!userRole || !roles.includes(userRole)) {
       return res.status(403).json({ 
         error: 'Acceso denegado',
         message: 'No tiene permisos para acceder a este recurso'
