@@ -88,4 +88,16 @@ app.listen(PORT, () => {
   console.log(`🌐 URL: http://localhost:${PORT}`);
 });
 
+const pool = require('./config/database');
+
+(async () => {
+  try {
+    const [rows] = await pool.query('SELECT 1 + 1 AS result');
+    console.log('✅ Conexión a BD exitosa:', rows[0].result);
+  } catch (error) {
+    console.error('❌ Error de conexión a BD:', error.message);
+  }
+})();
+
+
 module.exports = app;

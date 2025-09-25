@@ -5,24 +5,16 @@ const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'hospital_db',
+  database: process.env.DB_NAME || 'expediente_hospital',
   port: process.env.DB_PORT || 3306,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
-  acquireTimeout: 60000,
-  timeout: 60000,
-  reconnect: true
+  queueLimit: 0
 };
 
-// Crear pool de conexiones
-const pool = mysql.createPool(dbConfig);
+// Crear pool de conexiones con promesas
+const pool = mysql.createPool(dbConfig).promise();
 
-// Crear promesa para usar async/await
-const promisePool = pool.promise();
+module.exports = pool;
 
-module.exports = {
-  pool,
-  promisePool
-};
 
