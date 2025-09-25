@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import authService from '../services/authService';
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    nombre_usuario: '',
+    contrasena: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -23,21 +24,10 @@ const Login = () => {
     setError('');
 
     try {
-      // Simular login (por ahora)
-      if (formData.email === 'admin@hospital.com' && formData.password === 'admin123') {
-        localStorage.setItem('token', 'mock-jwt-token');
-        localStorage.setItem('user', JSON.stringify({
-          id: 1,
-          email: 'admin@hospital.com',
-          name: 'Dr. Administrador',
-          role: 'admin'
-        }));
-        navigate('/dashboard');
-      } else {
-        setError('Credenciales incorrectas');
-      }
+      const response = await authService.login(formData.nombre_usuario, formData.contrasena);
+      navigate('/dashboard');
     } catch (err) {
-      setError('Error al iniciar sesión');
+      setError(err.message || 'Error al iniciar sesión');
     } finally {
       setIsLoading(false);
     }
@@ -62,30 +52,30 @@ const Login = () => {
           )}
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email
+            <label htmlFor="nombre_usuario" className="block text-sm font-medium text-gray-700 mb-2">
+              Nombre de Usuario
             </label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
+              type="text"
+              id="nombre_usuario"
+              name="nombre_usuario"
+              value={formData.nombre_usuario}
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-hospital-blue focus:border-transparent"
-              placeholder="tu@email.com"
+              placeholder="admin"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="contrasena" className="block text-sm font-medium text-gray-700 mb-2">
               Contraseña
             </label>
             <input
               type="password"
-              id="password"
-              name="password"
-              value={formData.password}
+              id="contrasena"
+              name="contrasena"
+              value={formData.contrasena}
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-hospital-blue focus:border-transparent"
               placeholder="••••••••"
@@ -107,7 +97,7 @@ const Login = () => {
             Credenciales de prueba:
           </p>
           <p className="text-xs text-hospital-gray mt-2">
-            Email: admin@hospital.com<br />
+            Usuario: admin<br />
             Contraseña: admin123
           </p>
         </div>

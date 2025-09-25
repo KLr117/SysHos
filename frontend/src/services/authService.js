@@ -2,11 +2,11 @@ import api from './api';
 
 class AuthService {
   // Login
-  async login(email, password) {
+  async login(nombre_usuario, contrasena) {
     try {
       const response = await api.post('/auth/login', {
-        email,
-        password
+        nombre_usuario,
+        contrasena
       });
       
       if (response.data.token) {
@@ -24,12 +24,16 @@ class AuthService {
   async logout() {
     try {
       await api.post('/auth/logout');
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
     } catch (error) {
-      // Limpiar datos locales aunque falle la petición
+      // Continuar con el logout aunque falle la petición
+      console.error('Error en logout del servidor:', error);
+    } finally {
+      // Limpiar datos locales siempre
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      
+      // Emitir evento personalizado para notificar el logout
+      window.dispatchEvent(new CustomEvent('auth-logout'));
     }
   }
 
@@ -57,13 +61,33 @@ class AuthService {
   // Verificar si el usuario tiene un rol específico
   hasRole(role) {
     const user = this.getCurrentUser();
-    return user && user.role === role;
+    if (!user) return false;
+    
+    // Mapear fk_id_rol a nombres de roles
+    const roleMap = {
+      1: 'admin',
+      2: 'medico', 
+      3: 'enfermeria'
+    };
+    
+    const userRole = roleMap[user.fk_id_rol];
+    return userRole === role;
   }
 
   // Verificar si el usuario tiene alguno de los roles especificados
   hasAnyRole(roles) {
     const user = this.getCurrentUser();
-    return user && roles.includes(user.role);
+    if (!user) return false;
+    
+    // Mapear fk_id_rol a nombres de roles
+    const roleMap = {
+      1: 'admin',
+      2: 'medico', 
+      3: 'enfermeria'
+    };
+    
+    const userRole = roleMap[user.fk_id_rol];
+    return roles.includes(userRole);
   }
 }
 

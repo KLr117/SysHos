@@ -8,6 +8,7 @@ import Patients from './pages/Patients';
 import PatientAdmission from './pages/PatientAdmission';
 import Evolutions from './pages/Evolutions';
 import VitalSigns from './pages/VitalSigns';
+import Users from './pages/Users';
 import authService from './services/authService';
 import './App.css';
 
@@ -23,7 +24,23 @@ function App() {
     };
 
     checkAuth();
-  }, []);
+
+    // Listener para detectar cambios en el localStorage
+    const handleStorageChange = () => {
+      checkAuth();
+    };
+
+    // Escuchar cambios en localStorage
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Escuchar evento personalizado de logout
+    window.addEventListener('auth-logout', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('auth-logout', handleStorageChange);
+    };
+  }, [isAuthenticated]);
 
   if (isLoading) {
     return (
@@ -109,6 +126,17 @@ function App() {
             <ProtectedRoute requiredRoles={['admin', 'medico', 'enfermeria']}>
               <Layout>
                 <VitalSigns />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute requiredRoles={['admin']}>
+              <Layout>
+                <Users />
               </Layout>
             </ProtectedRoute>
           }
