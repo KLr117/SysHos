@@ -55,7 +55,7 @@ const Users = () => {
     e.preventDefault();
     try {
       if (editingUser) {
-        await userService.updateUser(editingUser.id, formData);
+        await userService.updateUser(editingUser.pk_id_usuario, formData);
       } else {
         await userService.createUser(formData);
       }
